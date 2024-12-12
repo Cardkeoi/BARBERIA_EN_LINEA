@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tuBarberiaOnline - Panel de Visita</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">TU BARBERIA ONLINE</a>
+            <nav class="navbar">
+                <ul>
+                    <li><a onclick="showSection('galeria')">Home</a></li>
+                    <li><a onclick="showSection('servicios')">Servicios</a></li>
+                    <li><a onclick="showSection('registro')">Registrarse como Cliente</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Galería de Trabajos -->
+        <div id="galeria" class="section active">
+            <h3>Galería de Trabajos</h3>
+            <div id="galeriaTrabajos" class="galeria-container"></div>
+        </div>
+
+        <!-- Servicios Disponibles -->
+        <div id="servicios" class="section">
+            <h3>Servicios</h3>
+            <table id="serviciosTable">
+                <thead>
+                    <tr>
+                        <th>Nombre del Servicio</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Registrarse como Cliente -->
+        <div id="registro" class="section">
+            <div class="registro-container">
+                <h3 class="registro-title">¡Únete a Tu Barbería Online!</h3>
+                <p class="registro-description">Regístrate como cliente y disfruta de todos estos beneficios:</p>
+                <ul class="registro-benefits">
+                    <li><i class="fas fa-calendar-check"></i> Agenda tus citas fácilmente.</li>
+                    <li><i class="fas fa-eye"></i> Consulta y administra tus citas realizadas.</li>
+                    <li><i class="fas fa-user-tie"></i> Mejor comunicación con nuestro equipo.</li>
+                </ul>
+                <button class="registro-btn" onclick="window.location.href='/registro'">¡Regístrate ahora!</button>
+            </div>
+        </div>
+    </div>
+
+<footer>
+    <div class="footer-container">
+        <div>Ubicación: Dirección de la Barbería</div>
+        <div>Contacto: Tel. 123-456-7890</div>
+        <div class="footer-social">
+            <a href="https://instagram.com/tubarberia">Instagram</a> |
+            <a href="https://facebook.com/tubarberia">Facebook</a>
+        </div>
+    </div>
+</footer>
+    
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+    
+        async function cargarServicios() {
+            const response = await fetch('/obtener_servicios');
+            const servicios = await response.json();
+            const serviciosTable = document.getElementById('serviciosTable').querySelector('tbody');
+            serviciosTable.innerHTML = '';
+            servicios.forEach(servicio => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${servicio.nombre_servicio}</td>
+                    <td>${servicio.descripcion}</td>
+                    <td>$${servicio.precio}</td>
+                `;
+                serviciosTable.appendChild(row);
+            });
+        }
+    
+        async function cargarGaleriaTrabajos() {
+            const response = await fetch('/obtener_trabajos');
+            const trabajos = await response.json();
+            const galeria = document.getElementById("galeriaTrabajos");
+            galeria.innerHTML = '';
+            trabajos.forEach(trabajo => {
+                const item = document.createElement("div");
+                item.classList.add("galeria-item");
+                item.innerHTML = `
+                    <img src="${trabajo.imagen_url}" alt="Trabajo de tatuaje">
+                    <p>${trabajo.descripcion}</p>
+                `;
+                galeria.appendChild(item);
+            });
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarServicios();
+            cargarGaleriaTrabajos();
+        });
+    </script>
+    
+        
+    </body>
+    </html>
+    

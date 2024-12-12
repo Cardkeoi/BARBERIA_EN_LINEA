@@ -1,0 +1,321 @@
+/* Configuración base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body, html {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    flex: 1;
+}
+h2, h3 {
+    text-align: center;
+    color: #f9f9f9;
+}
+button {
+    padding: 10px 20px;
+    background-color: #2196F3; /* Azul para botones */
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px 0;
+}
+button:hover {
+    background-color: #1976D2; /* Azul oscuro para hover */
+}
+.galeria-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+.galeria-item {
+    width: 200px;
+    background: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+}
+.galeria-item img {
+    width: 100%;
+    height: auto;
+}
+header, footer {
+    background-color: #1a1a1a;
+    padding: 15px 0;
+    text-align: center;
+    color: #f9f9f9;
+}
+.header-container, .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.logo {
+    font-size: 24px;
+    color: #2196F3; /* Azul para el logo */
+    text-decoration: none;
+    font-weight: bold;
+}
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+.navbar ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+footer .footer-social a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 5px;
+}
+/* Estilos para tablas */
+table {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #2c2c2c;
+    border-collapse: collapse;
+    color: #f9f9f9;
+}
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+    text-align: center;
+}
+th {
+    background-color: #333;
+    color: #ffffff;
+}
+tr:hover {
+    background-color: #444;
+}
+/* Ocultar todas las secciones por defecto */
+.section {
+    display: none;
+}
+/* Mostrar solo la sección activa */
+.active {
+    display: block;
+}
+/* Estilos generales para el contenedor de formularios */
+.form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(31, 31, 31, 0.85); /* Fondo semi-transparente */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo de encabezados */
+.form-container h3 {
+    color: #f1f1f1;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* Estilo de los campos del formulario */
+.form-container label {
+    display: block;
+    color: #b3b3b3;
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+.form-container input,
+.form-container select,
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Estilos específicos para los campos de entrada y selección */
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container input[type="date"],
+.form-container select {
+    background-color: #2c2c2c;
+    color: #ffffff;
+}
+
+/* Estilos para el botón */
+.form-container button {
+    background-color: #2196F3; /* Color de botón azul */
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #1976D2; /* Color más oscuro al hacer hover */
+}
+
+.form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(31, 31, 31, 0.85); /* Fondo semi-transparente */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.form-container h3 {
+    color: #f1f1f1;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+.form-container label {
+    display: block;
+    color: #b3b3b3;
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #2c2c2c;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #2196F3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #1976D2;
+}
+
+#contactoAdmin {
+    margin-top: 10px;
+}
+
+#contactoAdmin button {
+    background-color: #25D366; /* Verde para WhatsApp */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#contactoAdmin button:hover {
+    background-color: #128C7E; /* Verde oscuro para hover */
+}
+
+/* Estilo general del contenedor */
+.registro-container {
+    background-color: #2c2c2c; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+    padding: 30px;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    text-align: center;
+    max-width: 600px;
+}
+
+/* Estilo del título */
+.registro-title {
+    font-size: 1.8em;
+    color: #2196F3; /* Azul llamativo */
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Estilo de la descripción */
+.registro-description {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #e0e0e0; /* Gris claro */
+}
+
+/* Lista de beneficios */
+.registro-benefits {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.registro-benefits li {
+    font-size: 1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Iconos en la lista */
+.registro-benefits li i {
+    color: #2196F3; /* Azul para iconos */
+    font-size: 1.2em;
+}
+
+/* Botón llamativo */
+.registro-btn {
+    background-color: #2196F3; /* Azul brillante */
+    color: white;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+}
+
+.registro-btn:hover {
+    background-color: #1976D2; /* Azul más oscuro al pasar el mouse */
+    transform: scale(1.05); /* Ligera ampliación */
+}
+

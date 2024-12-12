@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TU BARBERIA ONLINE - Registro de Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('/static/img/barberia_fondo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(31, 31, 31, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            z-index: 2;
+            position: relative;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-group {
+            width: 80%;
+            margin: 0 auto;
+            text-align: left;
+        }
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #cccccc;
+            display: block;
+            margin-top: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+        button {
+            background-color: #2196F3;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .login-link a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h2>Registrarse en Tu Barberia</h2>
+            <form id="registroForm">
+                <div class="form-group">
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" name="username" placeholder="Ingresa tu usuario" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Ingresa tu email" required>
+                </div>
+
+                <button type="button" onclick="registrarCliente()">Registrarse</button>
+            </form>
+
+            <div class="login-link">
+                <p>¿Ya tienes una cuenta? <a href="/">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function registrarCliente() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
+
+            const response = await fetch('/registro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password, email })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Cliente registrado con éxito');
+                window.location.href = '/';
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+</body>
+</html>

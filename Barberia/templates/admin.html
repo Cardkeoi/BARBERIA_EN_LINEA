@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tuBarberiaOnline - Panel de Administración</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Estilos adicionales para el apartado "Subir Trabajo Realizado" */
+        #misTrabajos h3 {
+            margin-top: 30px;
+            color: #2196F3;
+            text-align: center;
+            font-size: 1.8em;
+        }
+        .form-upload {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin: 20px auto;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .form-upload label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1em;
+            color: #ffffff;
+        }
+        .form-upload input[type="file"],
+        .form-upload textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #444;
+            border: none;
+            color: #ffffff;
+        }
+        .form-upload textarea {
+            resize: none;
+            height: 80px;
+        }
+        .form-upload button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            background-color: #2196F3;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-upload button:hover {
+            background-color: #1976D2;
+        }
+        .galeria-container h3 {
+            color: #2196F3;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+    /* Botón de cerrar sesión */
+    .logout-btn {
+    padding: 8px 16px;
+    background-color: #e91e63;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    align-self: center; /* Centra el botón verticalmente */
+
+        }
+        .logout-btn:hover {
+            background-color: #c2185b;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .navbar {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center; /* Centra los enlaces de navegación */
+        }
+        .navbar ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            padding: 0;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #c2185b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">tuBarberiaOnline - Administración</a>
+            <nav class="navbar">
+                <ul>
+                    <li><a onclick="showSection('home')">Home</a></li>
+                    <li><a onclick="showSection('clientes')">Clientes</a></li>
+                    <li><a onclick="showSection('servicios')">Servicios</a></li>
+                    <li><a onclick="showSection('citas')">Citas</a></li>
+                    <li><a onclick="showSection('misTrabajos')">Mis Trabajos</a></li>
+                </ul>
+            </nav>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Galería de Trabajos en Home -->
+        <div id="home" class="section active">
+            <h3>Galería de Trabajos</h3>
+            <div class="galeria-container" id="galeriaTrabajos"></div>
+        </div>
+
+        <!-- Gestión de Clientes -->
+        <div id="clientes" class="section">
+            <h3>Clientes Registrados</h3>
+            <table id="clientesTable">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los clientes se cargarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="servicios" class="section">
+            <h3>Servicios</h3>
+            <table id="serviciosTable">
+                <thead>
+                    <tr>
+                        <th>Nombre del Servicio</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los servicios se cargarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        
+            <!-- Formulario para Agregar Servicio -->
+            <div class="form-container">
+                <h3>Agregar Servicio</h3>
+                <form id="formServicio">
+                    <input type="hidden" id="id_servicio" name="id_servicio">
+                    
+                    <label for="nombre_servicio">Nombre del Servicio:</label>
+                    <input type="text" id="nombre_servicio" name="nombre_servicio" required>
+                    
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" required></textarea>
+                    
+                    <label for="precio">Precio:</label>
+                    <input type="number" id="precio" name="precio" step="0.01" required>
+                    
+                    <button type="button" onclick="guardarServicio()">Agregar Servicio</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Citas Programadas -->
+        <div id="citas" class="section">
+            <h3>Citas Programadas</h3>
+            <table id="citasTable">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Servicio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las citas se cargarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Subir Trabajo Realizado -->
+        <div id="misTrabajos" class="section">
+            <h3>Subir Trabajo Realizado</h3>
+            <div class="form-upload">
+                <form id="subirTrabajoForm" enctype="multipart/form-data">
+                    <label for="imagen">Imagen del Trabajo:</label>
+                    <input type="file" id="imagen" name="imagen" required>
+
+                    <label for="descripcion">Descripción del Trabajo:</label>
+                    <textarea id="descripcion" name="descripcion" placeholder="Describe el trabajo realizado..." required></textarea>
+
+                    <button type="button" onclick="subirTrabajo()">Subir Trabajo</button>
+                </form>
+            </div>
+            <h3>Trabajos Subidos</h3>
+            <div id="trabajosSubidos" class="galeria-container"></div> <!-- Contenedor para listar trabajos -->
+        </div>
+    </div>
+        </div>
+    </div>
+
+
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    async function cargarClientes() {
+        const response = await fetch('/clientes');
+        const clientes = await response.json();
+        const clientesTable = document.getElementById('clientesTable').querySelector('tbody');
+        clientesTable.innerHTML = '';
+        clientes.forEach(cliente => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${cliente.username}</td>
+                <td>${cliente.email}</td>
+                <td>${cliente.rol}</td>
+            `;
+            clientesTable.appendChild(row);
+        });
+    }
+
+    async function cargarServicios() {
+        const response = await fetch('/obtener_servicios');
+        const servicios = await response.json();
+        const serviciosTable = document.getElementById('serviciosTable').querySelector('tbody');
+        serviciosTable.innerHTML = '';
+        servicios.forEach(servicio => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${servicio.nombre_servicio}</td>
+                <td>${servicio.descripcion}</td>
+                <td>$${servicio.precio}</td>
+                <td>
+                <button onclick="editarPrecio(${servicio.id_servicio}, '${servicio.precio}')">Editar Precio</button>
+                    <button onclick="eliminarServicio(${servicio.id_servicio})">Eliminar</button>
+                </td>
+            `;
+            serviciosTable.appendChild(row);
+        });
+    }
+
+    async function guardarServicio() {
+        const id_servicio = document.getElementById('id_servicio').value;
+        const nombre_servicio = document.getElementById('nombre_servicio').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const precio = document.getElementById('precio').value;
+
+        const url = id_servicio ? '/actualizar_servicio' : '/agregar_servicio';
+        const method = id_servicio ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_servicio, nombre_servicio, descripcion, precio })
+        });
+
+        const data = await response.json();
+        alert(data.message);
+        cargarServicios();
+        document.getElementById('formServicio').reset();
+    }
+
+    async function eliminarServicio(id_servicio) {
+        if (!confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;
+
+        const response = await fetch(`/eliminar_servicio`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_servicio })
+        });
+
+        const data = await response.json();
+        alert(data.message);
+        cargarServicios();
+    }
+
+    async function editarPrecio(id_servicio, precio_actual) {
+    const nuevoPrecio = prompt("Ingresa el nuevo precio:", precio_actual);
+    if (nuevoPrecio && !isNaN(nuevoPrecio)) {
+        try {
+            const response = await fetch('/actualizar_precio_servicio', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id_servicio, precio: parseFloat(nuevoPrecio) }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                cargarServicios(); // Actualiza la lista de servicios
+            } else {
+                alert("Error al actualizar el precio: " + data.message);
+            }
+        } catch (error) {
+            console.error("Error al actualizar el precio:", error);
+            alert("Ocurrió un error al actualizar el precio.");
+        }
+    } else {
+        alert("El precio ingresado no es válido.");
+    }
+}
+
+
+    async function cargarCitas() {
+        const response = await fetch('/obtener_citas_admin');
+        const citas = await response.json();
+        const citasTable = document.getElementById('citasTable').querySelector('tbody');
+        citasTable.innerHTML = '';
+
+        citas.forEach(cita => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${cita.username}</td>
+                <td>${new Date(cita.fecha_cita).toLocaleString()}</td>
+                <td>${cita.servicio}</td>
+                <td>${cita.estado}</td>
+                <td>
+                    ${cita.estado === "Pendiente" ? `<button onclick="cambiarEstadoCita(${cita.id_cita})">Marcar como Realizado</button>` : 'Realizado'}
+                </td>
+            `;
+            citasTable.appendChild(row);
+        });
+    }
+
+    async function cambiarEstadoCita(id_cita) {
+        const response = await fetch('/actualizar_estado_cita', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_cita, nuevo_estado: 'Realizado' })
+        });
+
+        const data = await response.json();
+        alert(data.message);
+        cargarCitas();
+    }
+
+    async function cargarGaleriaTrabajos() {
+    try {
+        const response = await fetch('/obtener_trabajos');
+        const trabajos = await response.json();
+
+        const galeria = document.getElementById("galeriaTrabajos");
+        galeria.innerHTML = ''; // Limpiar la galería antes de mostrar nuevos trabajos
+
+        trabajos.forEach(trabajo => {
+            const item = document.createElement("div");
+            item.classList.add("galeria-item");
+            item.innerHTML = `
+                <img src="${trabajo.imagen_url}" alt="Trabajo realizado">
+                <p>${trabajo.descripcion}</p>
+            `;
+            galeria.appendChild(item);
+        });
+    } catch (error) {
+        console.error("Error al cargar los trabajos:", error);
+        alert("Error al cargar los trabajos. Inténtalo de nuevo.");
+    }
+}
+
+
+    async function subirTrabajo() {
+    const formData = new FormData(document.getElementById("subirTrabajoForm"));
+    try {
+        const response = await fetch('/subir_trabajo', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert(data.message);
+            cargarTrabajosSubidos(); // Recargar la lista de trabajos
+            document.getElementById('subirTrabajoForm').reset();
+
+        } else {
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error("Error al subir el trabajo:", error);
+        alert("Error al subir el trabajo. Verifica el archivo e inténtalo de nuevo.");
+
+        
+    }
+}
+
+async function cargarTrabajosSubidos() {
+            try {
+                const response = await fetch('/obtener_trabajos');
+                const trabajos = await response.json();
+                const trabajosSubidos = document.getElementById("trabajosSubidos");
+                trabajosSubidos.innerHTML = ''; // Limpiar la galería antes de mostrar nuevos trabajos
+
+                trabajos.forEach(trabajo => {
+                    const item = document.createElement("div");
+                    item.classList.add("galeria-item");
+                    item.innerHTML = `
+                        <img src="${trabajo.imagen_url}" alt="Trabajo realizado">
+                        <p>${trabajo.descripcion}</p>
+                        <button onclick="eliminarTrabajo(${trabajo.id_trabajo})">Eliminar</button>
+                    `;
+                    trabajosSubidos.appendChild(item);
+                });
+            } catch (error) {
+                console.error("Error al cargar los trabajos:", error);
+                alert("Error al cargar los trabajos. Inténtalo de nuevo.");
+            }
+        }
+
+        // Función para eliminar un trabajo
+        async function eliminarTrabajo(id_trabajo) {
+            if (!confirm("¿Estás seguro de que deseas eliminar este trabajo?")) return;
+
+            try {
+                const response = await fetch(`/eliminar_trabajo`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id_trabajo })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    cargarTrabajosSubidos(); // Recargar la lista de trabajos
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error("Error al eliminar el trabajo:", error);
+                alert("Error al eliminar el trabajo. Inténtalo de nuevo.");
+            }
+        }
+
+
+
+    async function logout() {
+        await fetch('/logout', {
+            method: 'POST'
+        });
+        window.location.href = '/';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarClientes();
+        cargarServicios();
+        cargarCitas();
+        cargarGaleriaTrabajos();
+        cargarTrabajosSubidos();
+
+    });
+</script>
+
+</body>
+</html>

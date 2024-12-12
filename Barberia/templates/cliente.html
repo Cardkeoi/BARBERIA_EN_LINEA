@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tuBarberiaOnline - Panel de Cliente</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo"> TU BARBERIA ONLINE</a>
+            <nav class="navbar">
+                <ul>
+                    <li><a onclick="showSection('galeria')">Home</a></li>
+                    <li><a onclick="showSection('hacerCita')">Hacer Cita</a></li>
+                    <li><a onclick="showSection('verCitas')">Ver Citas</a></li>
+                    <li><a onclick="showSection('miPerfil')">Mi Perfil</a></li>
+
+                </ul>
+            </nav>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </header>
+    
+    <div class="container">
+    
+        <!-- Galería de Trabajos -->
+        <div id="galeria" class="section active">
+            <h3>Galería de Trabajos</h3>
+            <div id="galeriaTrabajos" class="galeria-container"></div>
+        </div>
+    
+        <!-- Formulario para hacer una cita -->
+        <div id="hacerCita" class="section">
+            <div class="form-container">
+                <h3>Hacer una Cita</h3>
+                <form id="hacerCitaForm" enctype="multipart/form-data">
+                    <label for="servicioSelect">Selecciona un servicio:</label>
+                    <select id="servicioSelect" name="servicio" required></select>
+        
+                    <label for="fechaCita">Fecha:</label>
+                    <input type="date" id="fechaCita" name="fecha" required>
+        
+                    <label for="horaCita">Hora:</label>
+                    <select id="horaCita" name="hora" required>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                    </select>
+        
+                    <button type="submit">Hacer Cita</button>
+                </form>
+            </div>
+        </div>
+        
+    
+        <!-- Ver Citas -->
+        <div id="verCitas" class="section">
+            <h3>Tus Citas</h3>
+            <table id="tusCitasTable">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Servicio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las citas se cargarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+       <!-- Mi Perfil -->
+       <div id="miPerfil" class="section">
+        <div class="form-container">
+            <h3>Editar Perfil</h3>
+            <form id="editarPerfilForm">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Ingresa tu nuevo email" required>
+            
+                <label for="newPassword">Nueva Contraseña:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Ingresa tu nueva contraseña">
+            
+                <button type="submit">Guardar Cambios</button>
+            </form>
+            
+        </div>
+    </div>
+    
+</div>
+    </div>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <div>Ubicación: Dirección de la Barberia</div>
+            <div>Contacto: Tel. 123-456-7890</div>
+            <div class="footer-social">
+                <a href="https://instagram.com/tubarberia">Instagram</a> |
+                <a href="https://facebook.com/tubarberia">Facebook</a>
+            
+    </footer>
+    
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+    
+        async function cargarServicios() {
+            const response = await fetch('/obtener_servicios');
+            const servicios = await response.json();
+            const servicioSelect = document.getElementById("servicioSelect");
+            servicioSelect.innerHTML = '';
+            servicios.forEach(servicio => {
+                const option = document.createElement("option");
+                option.value = servicio.id_servicio;
+                option.textContent = `${servicio.nombre_servicio} - $${servicio.precio}`;
+                servicioSelect.appendChild(option);
+            });
+        }
+    
+        async function cargarGaleriaTrabajos() {
+            const response = await fetch('/obtener_trabajos');
+            const trabajos = await response.json();
+            const galeria = document.getElementById("galeriaTrabajos");
+            galeria.innerHTML = '';
+            trabajos.forEach(trabajo => {
+                const item = document.createElement("div");
+                item.classList.add("galeria-item");
+                item.innerHTML = `
+                    <img src="${trabajo.imagen_url}" alt="Trabajo de tatuaje">
+                    <p>${trabajo.descripcion}</p>
+                `;
+                galeria.appendChild(item);
+            });
+        }
+    
+        document.getElementById('hacerCitaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+    
+            const response = await fetch('/hacer_cita', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const data = await response.json();
+            alert(data.message);
+            cargarCitasCliente(); // Actualizar citas después de hacer una nueva
+        });
+    
+        async function cargarCitas() {
+                try {
+                    const response = await fetch('/tus_citas');
+                    const data = await response.json();
+                    const citasTableBody = document.getElementById('tusCitasTable').querySelector('tbody');
+                    citasTableBody.innerHTML = ''; // Limpiar el contenido previo
+                    data.forEach(cita => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${cita.fecha_cita}</td>
+                            <td>${cita.servicio}</td>
+                            <td>${cita.estado}</td>
+                            <td>
+                                <button onclick="eliminarCita(${cita.id_cita})">Eliminar</button>
+                            </td>
+                        `;
+                        citasTableBody.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error('Error al obtener las citas:', error);
+                }
+            }
+
+        document.getElementById('hacerCitaForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const servicio = document.getElementById('servicioSelect').value;
+                const fecha = document.getElementById('fechaCita').value;
+                const hora = document.getElementById('horaCita').value;
+
+                try {
+                    const response = await fetch('/hacer_cita', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ servicio, fecha, hora })
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message);
+
+                    alert(data.message);
+                    cargarCitas();
+
+                } catch (error) {
+                    console.error('Error al hacer la cita:', error);
+                    alert(error.message);
+                }
+            });
+    
+            async function eliminarCita(id_cita) {
+                if (!confirm("¿Estás seguro de que deseas eliminar esta cita?")) return;
+                try {
+                    const response = await fetch('/eliminar_cita', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id_cita })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message);
+
+                    alert(data.message);
+                    cargarCitas();
+
+                } catch (error) {
+                    console.error('Error al eliminar la cita:', error);
+                    alert(error.message);
+                }
+            }
+
+            async function cargarPerfil() {
+            try {
+                const response = await fetch('/tus_citas'); // URL real del perfil del usuario
+                const data = await response.json();
+                document.getElementById('email').value = data.email;
+            } catch (error) {
+                console.error('Error al cargar perfil:', error);
+            }
+        }
+
+        async function actualizarPerfil() {
+            const email = document.getElementById('email').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            try {
+                const response = await fetch('/actualizar_cliente', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, newPassword })
+                });
+
+                const data = await response.json();
+                alert(data.message);
+                cargarPerfil();  // Recargar perfil después de la actualización
+            } catch (error) {
+                console.error('Error al actualizar perfil:', error);
+            }
+        }
+
+        async function logout() {
+            // Enviar una solicitud POST para cerrar sesión
+            await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            window.location.href = '/'; // Redirigir al inicio después de cerrar sesión
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarServicios();
+            cargarGaleriaTrabajos();
+            cargarCitas();
+            cargarPerfil();
+
+        });
+    </script>
+    <script>
+        document.getElementById('editarPerfilForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+    
+            const email = document.getElementById('email').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+    
+            if (!email) {
+                alert("El email es obligatorio.");
+                return;
+            }
+    
+            try {
+                const response = await fetch('/actualizar_cliente', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, newPassword }),
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    alert(data.message);
+                    document.getElementById('editarPerfilForm').reset(); // Limpiar el formulario
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error("Error al actualizar el perfil:", error);
+                alert("Ocurrió un error al actualizar el perfil.");
+            }
+        });
+    </script>
+    
+    </body>
+    </html>
+    
